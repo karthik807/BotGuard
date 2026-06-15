@@ -9,8 +9,8 @@ function App() {
   const counts = useRef({ allowed: 0, blocked: 0 });
 
   useEffect(() => {
-    // 1. Connect to the FastAPI WebSocket
-    const ws = new WebSocket('ws://127.0.0.1:8000/ws');
+    // 1. Connect to the FastAPI WebSocket LOCALLY
+    const ws = new WebSocket('ws://localhost:8001/ws');
 
     ws.onopen = () => console.log('Connected to BotGuard WebSocket');
     
@@ -24,7 +24,7 @@ function App() {
 
       // 4. Update the chart totals
       if (message.event === 'allowed') counts.current.allowed += 1;
-      if (message.event.includes('blocked')) counts.current.blocked += 1;
+      if (message.event === 'ml_blocked' || message.event === 'ml_blocked_attempt') counts.current.blocked += 1;
 
       // 5. Add a new point to the chart
       setData((prev) => {
@@ -43,7 +43,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>🛡️ BotGuard Live Dashboard</h1>
+      <h1> BotGuard Live Dashboard</h1>
       
       {/* The Line Chart */}
       <div style={{ height: '400px', width: '100%', marginBottom: '20px', border: '1px solid #ccc' }}>
